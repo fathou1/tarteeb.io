@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator 
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 
 type Priority = 'low' | 'medium' | 'high';
 
@@ -149,11 +150,13 @@ const TaskList: React.FC<TaskListProps> = ({
             {filteredTasks.map((task) => (
               <li key={task.id} className="hover:bg-muted/40 transition-colors">
                 <div className="flex items-center p-4 gap-3">
-                  <input 
-                    type="checkbox" 
+                  <Checkbox 
+                    id={`task-${task.id}`}
                     checked={task.completed}
-                    onChange={() => onTaskComplete && onTaskComplete(task.id)}
-                    className="h-5 w-5 rounded border-gray-300 text-tarteeb-purple focus:ring-tarteeb-purple cursor-pointer"
+                    onCheckedChange={() => onTaskComplete && onTaskComplete(task.id)}
+                    className={`h-5 w-5 rounded border ${
+                      task.completed ? 'data-[state=checked]:bg-tarteeb-purple data-[state=checked]:border-tarteeb-purple' : 'border-gray-300'
+                    } text-tarteeb-purple focus:ring-tarteeb-purple cursor-pointer`}
                   />
                   
                   <div className="flex-1 min-w-0">
