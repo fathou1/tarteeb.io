@@ -1,7 +1,5 @@
 
 import { format } from 'date-fns';
-import { AlertCircle, Clock, Check } from 'lucide-react';
-import React from 'react';
 
 export type EventPriority = 'high' | 'medium' | 'low';
 
@@ -44,18 +42,6 @@ export const events: Event[] = [
     completed: false
   }
 ];
-
-// Get priority icon element based on priority
-export const getPriorityElement = (priority: EventPriority) => {
-  switch (priority) {
-    case 'high':
-      return React.createElement(AlertCircle, { size: 14, className: "text-red-500" });
-    case 'medium':
-      return React.createElement(Clock, { size: 14, className: "text-amber-500" });
-    case 'low':
-      return React.createElement(Check, { size: 14, className: "text-green-500" });
-  }
-};
 
 // Helper to format date to YYYY-MM-DD for comparison
 export const formatDateToString = (date: Date) => {
