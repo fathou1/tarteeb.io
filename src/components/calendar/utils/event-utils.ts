@@ -1,5 +1,7 @@
 
 import { format } from 'date-fns';
+import { AlertCircle, Clock, Check } from 'lucide-react';
+import React from 'react';
 
 export type EventPriority = 'high' | 'medium' | 'low';
 
@@ -47,11 +49,11 @@ export const events: Event[] = [
 export const getPriorityElement = (priority: EventPriority) => {
   switch (priority) {
     case 'high':
-      return <AlertCircle size={14} className="text-red-500" />;
+      return React.createElement(AlertCircle, { size: 14, className: "text-red-500" });
     case 'medium':
-      return <Clock size={14} className="text-amber-500" />;
+      return React.createElement(Clock, { size: 14, className: "text-amber-500" });
     case 'low':
-      return <Check size={14} className="text-green-500" />;
+      return React.createElement(Check, { size: 14, className: "text-green-500" });
   }
 };
 
@@ -78,5 +80,3 @@ export const formatDateWithTime = (date: Date) => {
     minute: '2-digit'
   });
 };
-
-import { AlertCircle, Clock, Check } from 'lucide-react';
