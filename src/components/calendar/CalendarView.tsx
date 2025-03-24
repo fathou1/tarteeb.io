@@ -95,8 +95,8 @@ const CalendarView = () => {
     );
   };
 
-  // Custom day renderer to show event indicators in calendar
-  const dayRenderer = (day: Date) => {
+  // Custom day content renderer
+  const renderDayContent = (day: Date, _: any) => {
     // Check if there are events on this day
     const hasEvents = calendarEvents.some(event => formatDateToString(event.date) === formatDateToString(day));
     
@@ -210,7 +210,11 @@ const CalendarView = () => {
                   head: "flex",
                   table: "w-full border-collapse space-y-2",
                 }}
-                renderDay={dayRenderer}
+                components={{
+                  Day: ({ date: dayDate, ...props }) => {
+                    return <button {...props}>{renderDayContent(dayDate, props)}</button>;
+                  }
+                }}
               />
             </div>
             
