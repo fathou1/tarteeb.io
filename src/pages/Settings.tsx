@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import DashboardLayout, { useLanguage } from '@/components/layout/DashboardLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -8,11 +7,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { User, Bell, Moon, Save, LogOut, Lock, Globe, Brain } from 'lucide-react';
+import { User, Bell, Moon, Save, LogOut, Lock, Globe, Brain, Languages } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 const Settings = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { toast } = useToast();
+  const { language, changeLanguage } = useLanguage();
   
   const handleSave = () => {
     toast({
@@ -20,12 +22,20 @@ const Settings = () => {
       description: "Your settings have been saved successfully.",
     });
   };
+
+  const handleLanguageChange = (newLanguage: string) => {
+    changeLanguage(newLanguage);
+    toast({
+      title: "Language changed",
+      description: `The application language has been changed to ${newLanguage === 'en' ? 'English' : newLanguage === 'ar' ? 'Arabic' : 'French'}.`,
+    });
+  };
   
   return (
     <DashboardLayout title="Settings">
       <div className="space-y-6 max-w-4xl mx-auto">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid grid-cols-4 mb-8">
+          <TabsList className="grid grid-cols-5 mb-8">
             <TabsTrigger value="profile" className="data-[state=active]:bg-tarteeb-purple data-[state=active]:text-white">
               <User size={16} className="mr-2" />
               Profile
@@ -37,6 +47,10 @@ const Settings = () => {
             <TabsTrigger value="appearance" className="data-[state=active]:bg-tarteeb-purple data-[state=active]:text-white">
               <Moon size={16} className="mr-2" />
               Appearance
+            </TabsTrigger>
+            <TabsTrigger value="language" className="data-[state=active]:bg-tarteeb-purple data-[state=active]:text-white">
+              <Globe size={16} className="mr-2" />
+              Language
             </TabsTrigger>
             <TabsTrigger value="ai" className="data-[state=active]:bg-tarteeb-purple data-[state=active]:text-white">
               <Brain size={16} className="mr-2" />
@@ -263,6 +277,66 @@ const Settings = () => {
                 >
                   <Save size={16} />
                   Save Preferences
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="language" className="animate-fade-in">
+            <div className="tarteeb-card p-6">
+              <h3 className="text-lg font-semibold mb-4">Language Settings</h3>
+              <div className="space-y-4">
+                <p className="text-muted-foreground">Select your preferred language for the application interface.</p>
+                
+                <RadioGroup 
+                  defaultValue={language} 
+                  onValueChange={handleLanguageChange}
+                  className="space-y-3 mt-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="en" id="en" />
+                    <Label htmlFor="en" className="flex items-center cursor-pointer">
+                      <span className="w-8 h-8 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 mr-3">🇺🇸</span>
+                      English
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="ar" id="ar" />
+                    <Label htmlFor="ar" className="flex items-center cursor-pointer">
+                      <span className="w-8 h-8 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 mr-3">🇸🇦</span>
+                      العربية (Arabic)
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="fr" id="fr" />
+                    <Label htmlFor="fr" className="flex items-center cursor-pointer">
+                      <span className="w-8 h-8 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 mr-3">🇫🇷</span>
+                      Français (French)
+                    </Label>
+                  </div>
+                </RadioGroup>
+
+                <div className="p-4 mt-6 bg-muted rounded-lg flex items-start gap-3">
+                  <Languages className="text-muted-foreground mt-0.5 flex-shrink-0" size={20} />
+                  <div>
+                    <p className="font-medium">Language Settings</p>
+                    <p className="text-sm text-muted-foreground">
+                      Changing the language will affect the entire application interface. Some features may not be fully translated in all languages.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 flex justify-end">
+                <Button 
+                  variant="default" 
+                  onClick={handleSave}
+                  className="bg-tarteeb-purple hover:bg-tarteeb-purple/90 flex items-center gap-2"
+                >
+                  <Save size={16} />
+                  Save Language Preferences
                 </Button>
               </div>
             </div>

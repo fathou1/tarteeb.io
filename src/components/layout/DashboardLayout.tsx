@@ -10,6 +10,35 @@ interface DashboardLayoutProps {
   title: string;
 }
 
+// Create a context to manage language settings
+export const useLanguage = () => {
+  const storedLanguage = localStorage.getItem('language') || 'en';
+  const [language, setLanguage] = useState(storedLanguage);
+  
+  const changeLanguage = (newLanguage: string) => {
+    setLanguage(newLanguage);
+    localStorage.setItem('language', newLanguage);
+    
+    // Set RTL direction for Arabic
+    if (newLanguage === 'ar') {
+      document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr');
+    }
+  };
+  
+  // Initialize direction on component mount
+  useEffect(() => {
+    if (language === 'ar') {
+      document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr');
+    }
+  }, []);
+  
+  return { language, changeLanguage };
+};
+
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const location = useLocation();
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
