@@ -1,8 +1,9 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { cn } from '@/lib/utils';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const location = useLocation();
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   
   // Add animation classes to children when route changes
   useEffect(() => {
@@ -27,13 +29,19 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
   }, [location.pathname]);
   
   return (
-    <div className="min-h-screen flex bg-background dark:bg-background">
+    <div className="min-h-screen flex bg-background dark:bg-background relative">
       <Sidebar />
       
-      <div className="flex-1 transition-all duration-300 md:ml-[70px] lg:ml-64">
+      <div className={cn(
+        "flex-1 transition-all duration-300",
+        "md:ml-[70px] lg:ml-64",
+      )}>
         <Header title={title} />
         
-        <main id="dashboard-content" className="p-4 md:p-6 pb-24 max-w-screen-2xl mx-auto">
+        <main 
+          id="dashboard-content" 
+          className="p-4 md:p-6 pb-24 max-w-screen-2xl mx-auto"
+        >
           {children}
         </main>
       </div>

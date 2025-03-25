@@ -144,6 +144,20 @@
   .task-priority-high {
     @apply bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800;
   }
+  
+  /* New classes for sidebar improvements */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .sidebar-hover-effect {
+    @apply hover:bg-sidebar-accent/20 hover:text-white transition-all duration-200;
+  }
 }
 
 /* Smooth scrolling */
