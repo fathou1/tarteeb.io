@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Bell, Sun, Moon, Search } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/hooks/use-toast';
 
 interface HeaderProps {
   title: string;
@@ -10,20 +11,39 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   
   useEffect(() => {
     // Check for user's preferred color scheme
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setIsDarkMode(prefersDark);
+    const savedTheme = localStorage.getItem('theme');
     
-    if (prefersDark) {
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       document.documentElement.classList.add('dark');
+      setIsDarkMode(true);
+    } else {
+      document.documentElement.classList.remove('dark');
+      setIsDarkMode(false);
     }
   }, []);
   
   const toggleTheme = () => {
+    const newTheme = !isDarkMode ? 'dark' : 'light';
     setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
+    
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
+    localStorage.setItem('theme', newTheme);
+    
+    toast({
+      title: `${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode activated`,
+      description: `You've switched to ${newTheme} mode.`,
+      duration: 2000,
+    });
   };
   
   return (

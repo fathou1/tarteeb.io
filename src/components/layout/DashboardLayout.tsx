@@ -30,7 +30,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
     <div className="min-h-screen flex bg-background">
       <Sidebar />
       
-      <div className="flex-1 ml-0 md:ml-64 transition-all duration-300">
+      <div className="flex-1 transition-all duration-300 md:ml-[70px] lg:ml-64">
         <Header title={title} />
         
         <main id="dashboard-content" className="p-4 md:p-6 pb-24">

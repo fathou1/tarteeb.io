@@ -11,6 +11,8 @@ import Calendar from "./pages/Calendar";
 import Sleep from "./pages/Sleep";
 import Plugins from "./pages/Plugins";
 import Settings from "./pages/Settings";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/sleep" element={<Sleep />} />
           <Route path="/plugins" element={<Plugins />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

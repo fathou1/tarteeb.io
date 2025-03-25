@@ -10,7 +10,8 @@ import {
   Settings, 
   Puzzle, 
   ChevronLeft, 
-  ChevronRight 
+  ChevronRight,
+  LogIn
 } from 'lucide-react';
 
 interface SidebarItemProps {
@@ -35,12 +36,28 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
   
   useEffect(() => {
+    // Check for user's preferred color scheme
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+      setIsDarkMode(true);
+    } else {
+      document.documentElement.classList.remove('dark');
+      setIsDarkMode(false);
+    }
+    
     const checkSize = () => {
       if (window.innerWidth < 768) {
         setIsMobile(true);
+        setIsCollapsed(true);
+      } else if (window.innerWidth < 1024) {
+        setIsMobile(false);
         setIsCollapsed(true);
       } else {
         setIsMobile(false);
@@ -75,6 +92,7 @@ const Sidebar = () => {
     { to: '/sleep', label: 'Sleep Tracking', icon: <Moon size={20} /> },
     { to: '/plugins', label: 'Plugins', icon: <Puzzle size={20} /> },
     { to: '/settings', label: 'Settings', icon: <Settings size={20} /> },
+    { to: '/signin', label: 'Sign In', icon: <LogIn size={20} /> },
   ];
 
   const variants = {
