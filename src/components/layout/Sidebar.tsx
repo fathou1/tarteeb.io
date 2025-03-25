@@ -10,8 +10,10 @@ import {
   Settings, 
   Puzzle, 
   ChevronLeft, 
-  ChevronRight
+  ChevronRight,
+  Sun
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface SidebarItemProps {
   to: string;
@@ -24,10 +26,15 @@ interface SidebarItemProps {
 const SidebarItem = ({ to, label, icon, isCollapsed, isActive }: SidebarItemProps) => (
   <Link 
     to={to} 
-    className={`sidebar-item ${isActive ? 'active' : ''} ${isCollapsed ? 'justify-center' : ''}`}
+    className={`
+      flex items-center px-3 py-2 rounded-lg text-sidebar-foreground hover:text-white
+      hover:bg-tarteeb-purple/30 transition-colors duration-200
+      ${isActive ? 'bg-tarteeb-purple text-white' : ''}
+      ${isCollapsed ? 'justify-center' : 'gap-3'}
+    `}
   >
-    <span className="text-[20px]">{icon}</span>
-    {!isCollapsed && <span>{label}</span>}
+    <span className="text-[20px] flex-shrink-0">{icon}</span>
+    {!isCollapsed && <span className="text-sm font-medium whitespace-nowrap">{label}</span>}
   </Link>
 );
 
@@ -37,13 +44,13 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
+  const { toast } = useToast();
   
   useEffect(() => {
     // Check for user's preferred color scheme
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const savedTheme = localStorage.getItem('theme');
     
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
       setIsDarkMode(true);
     } else {
@@ -84,6 +91,26 @@ const Sidebar = () => {
     }
   };
   
+  const toggleTheme = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      setIsDarkMode(false);
+      toast({
+        title: "Light mode activated",
+        description: "Your preference has been saved.",
+      });
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+      setIsDarkMode(true);
+      toast({
+        title: "Dark mode activated",
+        description: "Your preference has been saved.",
+      });
+    }
+  };
+  
   const sidebarItems = [
     { to: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { to: '/tasks', label: 'Tasks', icon: <ListTodo size={20} /> },
@@ -98,13 +125,7 @@ const Sidebar = () => {
     closed: { x: '-100%', opacity: 0 },
   };
   
-  const sidebarClasses = `
-    fixed top-0 left-0 z-40 h-full bg-sidebar
-    ${isMobile ? 'w-64' : isCollapsed ? 'w-[70px]' : 'w-64'}
-    transition-all duration-300 ease-in-out
-    border-r border-sidebar-border
-    ${isMobile && !isOpen ? '-translate-x-full' : 'translate-x-0'}
-  `;
+  const sidebarWidth = isCollapsed ? 'w-[70px]' : 'w-64';
   
   return (
     <>
@@ -112,7 +133,7 @@ const Sidebar = () => {
       {isMobile && (
         <button 
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-tarteeb-dark text-white shadow-md"
+          className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-sidebar text-sidebar-foreground shadow-md"
           aria-label="Toggle sidebar"
         >
           {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
@@ -130,7 +151,12 @@ const Sidebar = () => {
       {/* Sidebar */}
       <AnimatePresence>
         <motion.aside
-          className={sidebarClasses}
+          className={`
+            fixed top-0 left-0 z-40 h-full bg-sidebar border-r border-sidebar-border
+            transition-all duration-300 ease-in-out
+            ${isMobile ? 'w-64' : sidebarWidth}
+            ${isMobile && !isOpen ? '-translate-x-full' : 'translate-x-0'}
+          `}
           initial={isMobile ? "closed" : "open"}
           animate={isOpen || !isMobile ? "open" : "closed"}
           variants={variants}
@@ -168,7 +194,7 @@ const Sidebar = () => {
             </div>
             
             {/* Navigation */}
-            <nav className="flex-1 py-8 px-2 space-y-1">
+            <nav className="flex-1 py-6 px-2 space-y-1 overflow-y-auto">
               {sidebarItems.map((item) => (
                 <SidebarItem
                   key={item.to}
@@ -180,6 +206,25 @@ const Sidebar = () => {
                 />
               ))}
             </nav>
+            
+            {/* Theme Toggle Button */}
+            <div className="px-2 mb-2">
+              <button
+                onClick={toggleTheme}
+                className={`
+                  w-full flex items-center px-3 py-2 rounded-lg text-sidebar-foreground 
+                  hover:text-white hover:bg-tarteeb-purple/30 transition-colors duration-200
+                  ${isCollapsed && !isMobile ? 'justify-center' : 'gap-3'}
+                `}
+              >
+                <span className="text-[20px] flex-shrink-0">
+                  {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                </span>
+                {!isCollapsed && <span className="text-sm font-medium whitespace-nowrap">
+                  {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                </span>}
+              </button>
+            </div>
             
             {/* User profile at bottom */}
             <div className="p-4 border-t border-sidebar-border">

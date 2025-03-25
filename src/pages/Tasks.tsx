@@ -5,6 +5,7 @@ import TaskList from '@/components/tasks/TaskList';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { 
   Dialog, 
   DialogContent, 
@@ -125,6 +126,13 @@ const monthlyTasks = [
 const Tasks = () => {
   const [activeTab, setActiveTab] = useState('daily');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [newTask, setNewTask] = useState({
+    title: '',
+    description: '',
+    priority: 'medium' as const,
+    dueDate: '',
+    category: 'Work',
+  });
   const { toast } = useToast();
   
   const handleTaskComplete = (id: string) => {
@@ -153,18 +161,46 @@ const Tasks = () => {
   };
   
   const handleSaveTask = () => {
+    if (!newTask.title.trim()) {
+      toast({
+        title: "Error",
+        description: "Task title is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
     toast({
       title: "Task added",
       description: "Your new task has been added successfully.",
     });
+    
+    // Reset form
+    setNewTask({
+      title: '',
+      description: '',
+      priority: 'medium',
+      dueDate: '',
+      category: 'Work',
+    });
+    
     setDialogOpen(false);
+  };
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewTask(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const handleSelectChange = (name: string, value: string) => {
+    setNewTask(prev => ({ ...prev, [name]: value }));
   };
   
   return (
     <DashboardLayout title="Tasks">
       <div className="space-y-4">
         <Tabs defaultValue="daily" onValueChange={setActiveTab} className="w-full">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
             <TabsList>
               <TabsTrigger value="daily" className="data-[state=active]:bg-tarteeb-purple data-[state=active]:text-white">Daily</TabsTrigger>
               <TabsTrigger value="weekly" className="data-[state=active]:bg-tarteeb-purple data-[state=active]:text-white">Weekly</TabsTrigger>
@@ -218,7 +254,7 @@ const Tasks = () => {
         </Tabs>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="tarteeb-card p-5">
+          <div className="tarteeb-card p-5 border border-border rounded-lg shadow-sm bg-card">
             <h3 className="text-lg font-semibold mb-4">AI Task Insights</h3>
             <div className="space-y-4">
               <div className="p-3 bg-tarteeb-purple/10 rounded-lg">
@@ -230,7 +266,7 @@ const Tasks = () => {
             </div>
           </div>
           
-          <div className="tarteeb-card p-5 col-span-1 md:col-span-2">
+          <div className="tarteeb-card p-5 col-span-1 md:col-span-2 border border-border rounded-lg shadow-sm bg-card">
             <h3 className="text-lg font-semibold mb-4">Task Completion Trends</h3>
             <div className="grid grid-cols-7 gap-1 h-32">
               {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, i) => {
@@ -265,23 +301,42 @@ const Tasks = () => {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Task Title</label>
-              <Input placeholder="Enter task title" />
+              <Input 
+                placeholder="Enter task title" 
+                name="title"
+                value={newTask.title}
+                onChange={handleInputChange}
+              />
             </div>
             
             <div className="space-y-2">
               <label className="text-sm font-medium">Description</label>
-              <Input placeholder="Enter task description" />
+              <Textarea 
+                placeholder="Enter task description" 
+                name="description"
+                value={newTask.description}
+                onChange={handleInputChange}
+                rows={3}
+              />
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Due Date</label>
-                <Input type="date" />
+                <Input 
+                  type="datetime-local" 
+                  name="dueDate"
+                  value={newTask.dueDate}
+                  onChange={handleInputChange}
+                />
               </div>
               
               <div className="space-y-2">
                 <label className="text-sm font-medium">Priority</label>
-                <Select defaultValue="medium">
+                <Select 
+                  value={newTask.priority}
+                  onValueChange={(value) => handleSelectChange('priority', value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select priority" />
                   </SelectTrigger>
@@ -296,16 +351,19 @@ const Tasks = () => {
             
             <div className="space-y-2">
               <label className="text-sm font-medium">Category</label>
-              <Select defaultValue="work">
+              <Select 
+                value={newTask.category}
+                onValueChange={(value) => handleSelectChange('category', value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="work">Work</SelectItem>
-                  <SelectItem value="personal">Personal</SelectItem>
-                  <SelectItem value="meetings">Meetings</SelectItem>
-                  <SelectItem value="team">Team</SelectItem>
-                  <SelectItem value="finance">Finance</SelectItem>
+                  <SelectItem value="Work">Work</SelectItem>
+                  <SelectItem value="Personal">Personal</SelectItem>
+                  <SelectItem value="Meetings">Meetings</SelectItem>
+                  <SelectItem value="Team">Team</SelectItem>
+                  <SelectItem value="Finance">Finance</SelectItem>
                 </SelectContent>
               </Select>
             </div>

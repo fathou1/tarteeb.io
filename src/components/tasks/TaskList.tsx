@@ -1,14 +1,15 @@
 
 import { useState } from 'react';
 import { 
-  Check, 
-  Clock, 
   AlertCircle, 
+  Clock, 
+  Check, 
   MoreVertical, 
   Edit, 
   Trash2, 
   Plus, 
-  Filter 
+  Filter,
+  CalendarDays
 } from 'lucide-react';
 import { 
   DropdownMenu, 
@@ -18,7 +19,8 @@ import {
   DropdownMenuSeparator 
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import TaskCheck from './TaskCheck';
+import { Badge } from '@/components/ui/badge';
 
 type Priority = 'low' | 'medium' | 'high';
 
@@ -71,19 +73,19 @@ const TaskList: React.FC<TaskListProps> = ({
   const getPriorityClass = (priority: Priority) => {
     switch (priority) {
       case 'high':
-        return 'task-priority-high';
+        return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
       case 'medium':
-        return 'task-priority-medium';
+        return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
       case 'low':
-        return 'task-priority-low';
+        return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
     }
   };
   
   return (
-    <div className="tarteeb-card animate-fade-in">
+    <div className="tarteeb-card animate-fade-in border border-border rounded-lg shadow-sm overflow-hidden bg-card">
       <div className="p-5 border-b border-border">
         <div className="flex justify-between items-center mb-1">
-          <h3 className="text-lg font-semibold text-tarteeb-dark dark:text-white">{title}</h3>
+          <h3 className="text-lg font-semibold">{title}</h3>
           <div className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -149,58 +151,58 @@ const TaskList: React.FC<TaskListProps> = ({
           <ul className="divide-y divide-border">
             {filteredTasks.map((task) => (
               <li key={task.id} className="hover:bg-muted/40 transition-colors">
-                <div className="flex items-center p-4 gap-3">
-                  <Checkbox 
-                    id={`task-${task.id}`}
-                    checked={task.completed}
-                    onCheckedChange={() => onTaskComplete && onTaskComplete(task.id)}
-                    className={`h-5 w-5 rounded border ${
-                      task.completed ? 'data-[state=checked]:bg-tarteeb-purple data-[state=checked]:border-tarteeb-purple' : 'border-gray-300'
-                    } text-tarteeb-purple focus:ring-tarteeb-purple cursor-pointer`}
-                  />
-                  
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium ${task.completed ? 'line-through text-muted-foreground' : 'text-tarteeb-dark dark:text-white'}`}>
-                      {task.title}
-                    </p>
-                    {task.description && (
-                      <p className="text-xs text-muted-foreground truncate max-w-md">
-                        {task.description}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    {task.dueDate && (
-                      <span className="text-xs text-muted-foreground">{task.dueDate}</span>
-                    )}
+                <div className="p-4">
+                  <div className="flex items-start justify-between">
+                    <TaskCheck 
+                      id={`task-${task.id}`}
+                      checked={task.completed}
+                      label={task.title}
+                      description={task.description}
+                      priority={task.priority}
+                      onCheckedChange={() => onTaskComplete && onTaskComplete(task.id)}
+                    />
                     
-                    <span className={`px-2 py-1 text-xs rounded-full flex items-center gap-1 ${getPriorityClass(task.priority)}`}>
-                      {getPriorityIcon(task.priority)}
-                      {task.priority}
-                    </span>
-                    
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <MoreVertical size={14} />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => onTaskEdit && onTaskEdit(task.id)}>
-                          <Edit size={14} className="mr-2" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          onClick={() => onTaskDelete && onTaskDelete(task.id)}
-                          className="text-red-500 focus:text-red-500"
-                        >
-                          <Trash2 size={14} className="mr-2" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="flex items-center gap-2 ml-4">
+                      {task.dueDate && (
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <CalendarDays size={14} />
+                          <span>{task.dueDate}</span>
+                        </div>
+                      )}
+                      
+                      {task.category && (
+                        <Badge variant="outline" className="text-xs px-2 py-0 h-5">
+                          {task.category}
+                        </Badge>
+                      )}
+                      
+                      <Badge className={`ml-2 text-xs px-2 py-0 h-5 flex items-center gap-1 ${getPriorityClass(task.priority)}`}>
+                        {getPriorityIcon(task.priority)}
+                        {task.priority}
+                      </Badge>
+                      
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-7 w-7">
+                            <MoreVertical size={14} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => onTaskEdit && onTaskEdit(task.id)}>
+                            <Edit size={14} className="mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem 
+                            onClick={() => onTaskDelete && onTaskDelete(task.id)}
+                            className="text-red-500 focus:text-red-500"
+                          >
+                            <Trash2 size={14} className="mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </div>
                 </div>
               </li>
