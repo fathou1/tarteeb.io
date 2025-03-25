@@ -10,8 +10,7 @@ import {
   Settings, 
   Puzzle, 
   ChevronLeft, 
-  ChevronRight,
-  LogIn
+  ChevronRight
 } from 'lucide-react';
 
 interface SidebarItemProps {
@@ -92,7 +91,6 @@ const Sidebar = () => {
     { to: '/sleep', label: 'Sleep Tracking', icon: <Moon size={20} /> },
     { to: '/plugins', label: 'Plugins', icon: <Puzzle size={20} /> },
     { to: '/settings', label: 'Settings', icon: <Settings size={20} /> },
-    { to: '/signin', label: 'Sign In', icon: <LogIn size={20} /> },
   ];
 
   const variants = {

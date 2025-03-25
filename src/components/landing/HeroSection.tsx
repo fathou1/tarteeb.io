@@ -30,11 +30,11 @@ const HeroSection = () => {
             </div>
             
             <div className="flex flex-wrap gap-4">
-              <Link to="/dashboard" className="tarteeb-button-primary flex items-center gap-2 group">
+              <Link to="/signin" className="tarteeb-button-primary flex items-center gap-2 group">
                 Get Started
                 <ArrowRight size={18} className="transform transition-transform group-hover:translate-x-1" />
               </Link>
-              <Link to="/dashboard" className="tarteeb-button-outline">
+              <Link to="/signin" className="tarteeb-button-outline">
                 Try for Free
               </Link>
             </div>

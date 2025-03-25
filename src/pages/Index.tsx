@@ -32,10 +32,10 @@ const Index = () => {
           </nav>
           
           <div className="flex items-center gap-2">
-            <Link to="/dashboard" className="hidden md:inline-block text-sm font-medium px-4 py-2 rounded-lg hover:bg-muted transition-colors">
+            <Link to="/signin" className="hidden md:inline-block text-sm font-medium px-4 py-2 rounded-lg hover:bg-muted transition-colors">
               Log in
             </Link>
-            <Link to="/dashboard" className="tarteeb-button-primary text-sm">
+            <Link to="/signin" className="tarteeb-button-primary text-sm">
               Get Started
             </Link>
           </div>
@@ -55,7 +55,7 @@ const Index = () => {
             <p className="text-lg mb-8 text-gray-300">
               Ready to transform your productivity with AI-powered task management? Start your journey today.
             </p>
-            <Link to="/dashboard" className="inline-block px-8 py-3 font-medium rounded-lg bg-tarteeb-orange text-tarteeb-dark hover:bg-tarteeb-orange/90 transition-colors">
+            <Link to="/signin" className="inline-block px-8 py-3 font-medium rounded-lg bg-tarteeb-orange text-tarteeb-dark hover:bg-tarteeb-orange/90 transition-colors">
               Start for Free
             </Link>
           </div>
