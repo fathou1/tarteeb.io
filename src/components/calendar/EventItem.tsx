@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
-import { Event, getPriorityElement } from './utils/event-utils';
+import { Event, getPriorityColorClass } from './utils/event-utils';
 
 interface EventItemProps {
   event: Event;
@@ -42,11 +42,11 @@ const EventItem = ({ event, showTime = false, onToggleComplete }: EventItemProps
         <div className="flex items-center gap-2">
           {showTime && (
             <div className="flex items-center gap-1">
-              {getPriorityElement(event.priority)}
+              <div className={`w-2 h-2 rounded-full ${getPriorityColorClass(event.priority)}`}></div>
               <span className="text-xs font-medium capitalize">{event.priority}</span>
             </div>
           )}
-          {!showTime && getPriorityElement(event.priority)}
+          {!showTime && <div className={`w-2 h-2 rounded-full ${getPriorityColorClass(event.priority)}`}></div>}
           <Button 
             variant="ghost" 
             size="icon" 

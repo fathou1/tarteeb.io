@@ -1,6 +1,5 @@
 
 import { format } from 'date-fns';
-import React from 'react';
 
 export type EventPriority = 'high' | 'medium' | 'low';
 
@@ -68,16 +67,16 @@ export const formatDateWithTime = (date: Date) => {
   });
 };
 
-// Function to get the priority element based on priority level
-export const getPriorityElement = (priority: EventPriority) => {
+// Function to get the priority color class based on priority level
+export const getPriorityColorClass = (priority: EventPriority): string => {
   switch (priority) {
     case 'high':
-      return <div className="w-2 h-2 rounded-full bg-red-500"></div>;
+      return 'bg-red-500';
     case 'medium':
-      return <div className="w-2 h-2 rounded-full bg-amber-500"></div>;
+      return 'bg-amber-500';
     case 'low':
-      return <div className="w-2 h-2 rounded-full bg-green-500"></div>;
+      return 'bg-green-500';
     default:
-      return null;
+      return '';
   }
 };
